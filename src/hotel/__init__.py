@@ -10,7 +10,7 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'mysecretkey'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:pass@db/empruntLivre'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:pass@db/hoteldb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
