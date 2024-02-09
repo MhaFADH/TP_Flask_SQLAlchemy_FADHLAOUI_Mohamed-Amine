@@ -1,12 +1,12 @@
 #FADHLAOUI MOHAMED-AMINE
 
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, request, jsonify
 from .database import db
-from .models import Client
 from .models import Chambre
 
 
 
+chambre_bp = Blueprint('chambre_bp', __name__)
 main = Blueprint('main', __name__)
 
 
@@ -15,13 +15,13 @@ def index():
 
     return "<h1>Api reservation chambre d'hotel, training python database manipulation</h1>"
     
-@main.route('/api/chambres/disponibles', methods=['GET'])
+@chambre_bp.route('/api/chambres/disponibles', methods=['GET'])
 def inscription():
     
 
-        return render_template('index.html')
+        return "TODO"
 
-@main.route('/api/chambres', methods=['POST'])
+@chambre_bp.route('/', methods=['POST'])
 def addRoom():
     body = request.get_json()
 
@@ -40,7 +40,7 @@ def addRoom():
         db.session.rollback()
         return jsonify({'success':False, 'message':'Error, Room not added, maybe it already exists'})
     
-@main.route('/api/chambres/<id>', methods=['PUT'])
+@chambre_bp.route('/<id>', methods=['PUT'])
 def editRoom(id):
         
     room = Chambre.query.get_or_404(id)
@@ -58,3 +58,15 @@ def editRoom(id):
         db.session.rollback()
         return jsonify({'success':False, 'message':'Error, Room not edited, body not valid or room number already used'})
 
+@chambre_bp.route('/<id>', methods=['DELETE'])
+def deleteRoom(id):
+        
+    room = Chambre.query.get_or_404(id)
+
+    try:
+        db.session.delete(room)
+        db.session.commit()
+        return jsonify({'success':True, 'message':'Room deleted successfully'})
+    except:
+        db.session.rollback()
+        return jsonify({'success':False, 'message':'Error, Room could not be deleted, maybe it is used in a reservation'})

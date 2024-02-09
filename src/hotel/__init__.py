@@ -4,6 +4,10 @@ from flask import Flask
 from flask_migrate import Migrate
 from .models import *
 from .database import db
+from .rtChambre import chambre_bp,main
+from .rtReservation import reservation_bp
+from .rtClient import client_bp
+
 
 migrate = Migrate()
 
@@ -20,7 +24,9 @@ def create_app():
 
     migrate.init_app(app, db)
 
-    from .routes import main
+    app.register_blueprint(chambre_bp, url_prefix='/api/chambres')
+    app.register_blueprint(reservation_bp, url_prefix='/api/reservations')
+    app.register_blueprint(client_bp, url_prefix='/api/clients')
     app.register_blueprint(main)
 
 
