@@ -39,3 +39,22 @@ def addRoom():
     except:
         db.session.rollback()
         return jsonify({'success':False, 'message':'Error, Room not added, maybe it already exists'})
+    
+@main.route('/api/chambres/<id>', methods=['PUT'])
+def editRoom(id):
+        
+    room = Chambre.query.get_or_404(id)
+
+    body = request.get_json()
+    
+    room.numero=body['numero'],
+    room.type=body['type'],
+    room.prix=body['prix']
+
+    try:
+        db.session.commit()
+        return jsonify({'success':True, 'message':'Room edited successfully'})
+    except:
+        db.session.rollback()
+        return jsonify({'success':False, 'message':'Error, Room not edited, body not valid or room number already used'})
+
