@@ -1,8 +1,9 @@
 #FADHLAOUI MOHAMED-AMINE
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, jsonify
 from .database import db
 from .models import Client
+from .models import Chambre
 
 
 
@@ -12,30 +13,29 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
 
-    # auteurs = Client.query.all()
-    # tabl = []
-
-    # for auteur in auteurs:
-    #     tabl.append(f"<h1>auteur{auteur.emprunts.date_emprunt}</h1>")
-
-    # mainstr = ''.join(tabl)
-
-    return "<h1>hello world</h1>"
+    return "<h1>Api reservation chambre d'hotel, training python database manipulation</h1>"
     
-# @main.route('/inscription', methods=['GET', 'POST'])
-# def inscription():
-#     form = InscriptionForm()
-#     # opérations pour enregistrer le formulaire
-#     if form.validate_on_submit():
+@main.route('/api/chambres/disponibles', methods=['GET'])
+def inscription():
+    
 
-#         new_user = Client(
-#             nom=form.nom.data,
-#             email=form.email.data,
-#         )
+        return render_template('index.html')
 
-#         db.session.add(new_user)
-#         db.session.commit()
+@main.route('/api/chambres', methods=['POST'])
+def addRoom():
+    body = request.get_json()
 
-#         return render_template('index.html')
+    new_room = Chambre(
+        numero=body['numero'],
+        type=body['type'],
+        prix=body['prix']
+    )
 
+    db.session.add(new_room)
 
+    try:
+        db.session.commit()
+        return jsonify({'success':True, 'message':'Room added successfully'})
+    except:
+        db.session.rollback()
+        return jsonify({'success':False, 'message':'Error, Room not added, maybe it already exists'})
